@@ -20,7 +20,7 @@ Pre-Requisites
 3- Migrate Java Source Code to your own Bitbucket repository – Refer
 4- Create account in Sonarcloud.
 5- Create account in Jfrog cloud.
-- source code [git clone https://bitbucket.org/dptrealtime/java-login-app.git]
+- source code [https://github.com/Atangoinfotech/java-login-app.git]
 
 Pre-Deployment
 1- Create Global AMI
