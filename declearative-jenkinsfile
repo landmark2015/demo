@@ -1,0 +1,67 @@
+pipeline{
+    options {}
+    triggers {}
+    tools {
+        maven = "maven3.9.5"
+    }
+    stages{
+        stage('1.checkout code'){
+            steps{
+                sh "echo ' cloning latest version of code' "
+                git "project repo-URL"
+            }
+        }
+        stage('2.maven biuld'){
+             steps{
+                sh "echo ' building latest version of code' "
+                sh "mvn package"
+             }
+        }
+        stage('3.code quality'){
+            steps{
+                sh "echo 'running code quality analysis' "
+                sh "mvn sonar:sonar"
+            }
+        }
+        stage('4.upload artifacts'){
+            steps{
+                sh "echo 'uploading artifacts to nexus' "
+                sh "mvn deploy"
+            }
+        }
+        stage('5.deploy2UAT'){
+            steps{
+                 sh "echo 'review application' "
+                 deploy adapter
+            }
+        }
+        stage('6.manualAG'){  # time limit not really neccessary
+            steps{
+                sh "echo ' application ready for deployment' "
+                timeout(time:600, unut:'MUNITES'){
+                    input meaasage: 'please review and approve application'
+                }
+            }
+        }
+        stage('7.building image'){
+            steps{
+                script{
+                sh "echo 'building docker image' "
+                sh "docker build -t imagename<tage> "
+              }
+            }
+        }
+        stage('image upload'){
+            steps{
+                script{
+                sh " 'uploading image to docker registory' "
+                sh "docker push imagename docker-registory-repo"
+               }
+            }
+        }
+    post{
+        success: ''
+        failure: ''
+    }
+    slack{}
+}   
